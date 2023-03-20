@@ -14,4 +14,4 @@ $(SSL_CRT):	$(SSL_KEY)
 
 nginx:	$(SSL_KEY) $(SSL_CRT)
 	docker build -t $(NGX_IMAGE) $(NGX_DIR)
-	docker run -d --name $(NGX_CONTAINER) -p 80:80 -p 443:443 $(NGX_IMAGE)
+	docker run -d --name $(NGX_CONTAINER) -p 443:443 $(NGX_IMAGE)
