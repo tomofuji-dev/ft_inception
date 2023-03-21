@@ -4,10 +4,10 @@ FROM alpine:3.17
 ENV NGINX_VERSION 1.22.1
 ENV PKG_RELEASE   0
 
+# Install Nginx with the specified version
 RUN set -x \
-	&& apk update \
-	&& apk add --no-cache nginx=${NGINX_VERSION}-r${PKG_RELEASE} \
-# forward request and error logs to docker log collector
+    && apk add --no-cache nginx=${NGINX_VERSION}-r${PKG_RELEASE} \
+    # Forward request and error logs to docker log collector
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
@@ -22,6 +22,7 @@ COPY ssl/server.key /etc/nginx/ssl/server.key
 # Expose port 443 for HTTPS
 EXPOSE 443
 
+# Set the stop signal for graceful shutdown
 STOPSIGNAL SIGQUIT
 
 # Start Nginx in the foreground to keep the container running
