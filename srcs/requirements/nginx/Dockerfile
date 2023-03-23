@@ -15,7 +15,7 @@ RUN set -x \
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 # Copy static content
-COPY tools/html /usr/share/nginx/html
+# COPY tools/html /usr/share/nginx/html
 COPY ssl/server.crt /etc/nginx/ssl/server.crt
 COPY ssl/server.key /etc/nginx/ssl/server.key
 
@@ -24,6 +24,10 @@ EXPOSE 443
 
 # Set the stop signal for graceful shutdown
 STOPSIGNAL SIGQUIT
+
+# Set entrypoint
+COPY tools/docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Start Nginx in the foreground to keep the container running
 CMD ["nginx", "-g", "daemon off;"]
