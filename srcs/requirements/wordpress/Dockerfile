@@ -7,7 +7,8 @@ ENV WORDPRESS_SHA1 c0cda8da15ac9e1c58d90f26e92ff2f1e99cf27d
 
 # 必要なパッケージのインストールと設定
 RUN apk update && \
-    apk add curl \
+    apk add --no-cache \
+        curl \
         php \
         php-fpm \
         php-json \
@@ -19,14 +20,22 @@ RUN apk update && \
         php-curl \
         mariadb-client
 
+ENV WP_CLI_GPG_KEY 63AF7AA15067C05616FDDD88A3A2E8F226F0BC06
+ENV WP_CLI_VERSION 2.7.1
+ENV WP_PATH /var/www/html
+
 # WordPressのダウンロードと展開
-RUN curl -O https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    tar -xzf wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    rm wordpress-${WORDPRESS_VERSION}.tar.gz && \
+RUN apk add --no-cache --virtual .fetch-deps gnupg && \
     mkdir -p /var/www/ && \
-    mv wordpress /var/www/html && \
-    chown -R nobody:nobody /var/www/html && \
-    chown -R nobody:nobody /var/log/php81
+	curl -o /usr/local/bin/wp.gpg -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.gpg" && \
+	GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
+	gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$WP_CLI_GPG_KEY" && \
+	gpg --batch --decrypt --output /usr/local/bin/wp /usr/local/bin/wp.gpg && \
+	gpgconf --kill all && \
+	rm -rf "$GNUPGHOME" /usr/local/bin/wp.gpg && unset GNUPGHOME && apk del --no-network .fetch-deps && \
+	chmod +x /usr/local/bin/wp && \
+    chown -R nobody:nobody /var/log/php81 && \
+    wp core download --allow-root --path="${WP_PATH}"
 
 # PHP-FPMの設定
 COPY conf/php-fpm.conf /etc/php81/php-fpm.d/www.conf
