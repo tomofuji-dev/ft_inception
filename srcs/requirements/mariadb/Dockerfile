@@ -1,0 +1,1 @@
+ENV MARIADB_VERSION=1:11.0.1+maria~ubu2204

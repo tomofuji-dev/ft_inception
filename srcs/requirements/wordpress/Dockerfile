@@ -1,10 +1,6 @@
 # ベースイメージの選択
 FROM alpine:3.17
 
-# 環境変数の設定
-ENV WORDPRESS_VERSION 5.8.3
-ENV WORDPRESS_SHA1 c0cda8da15ac9e1c58d90f26e92ff2f1e99cf27d
-
 # 必要なパッケージのインストールと設定
 RUN apk update && \
     apk add --no-cache \
@@ -20,11 +16,13 @@ RUN apk update && \
         php-curl \
         mariadb-client
 
-ENV WP_CLI_GPG_KEY 63AF7AA15067C05616FDDD88A3A2E8F226F0BC06
-ENV WP_CLI_VERSION 2.7.1
-ENV WP_PATH /var/www/html
+ENV WP_CLI_VERSION=2.7.1
+ENV WP_CLI_GPG_KEY=63AF7AA15067C05616FDDD88A3A2E8F226F0BC06
 
-# WordPressのダウンロードと展開
+ARG WP_PATH
+ENV WP_PATH=${WP_PATH}
+
+# WordPressのインストール
 RUN apk add --no-cache --virtual .fetch-deps gnupg && \
     mkdir -p /var/www/ && \
 	curl -o /usr/local/bin/wp.gpg -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.gpg" && \
