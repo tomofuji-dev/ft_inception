@@ -4,7 +4,7 @@ set -eu -o pipefail
 # 	--dbname="${DB_NAME}" \
 # 	--dbuser="${DB_USER}" \
 # 	--dbpass="${DB_PASS}" \
-# 	--dbhost=mariadb:3306 \
+# 	--dbhost="${DB_HOST}" \
 # 	--path="${WP_PATH}" \
 # 	--allow-root
 # wp db create

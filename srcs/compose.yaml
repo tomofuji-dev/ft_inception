@@ -28,6 +28,7 @@ services:
       - DB_NAME
       - DB_USER
       - DB_PASS
+      - DB_HOST
       - WP_PATH
       - WP_URL
       - WP_TITLE
