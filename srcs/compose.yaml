@@ -56,7 +56,17 @@ services:
 
 volumes:
   wp-vol:
+    driver: local
+    driver_opts:
+      type: none
+      device: "$VOL_PATH/wp_vol"
+      o: bind
   db-vol:
+    driver: local
+    driver_opts:
+      type: none
+      device: "$VOL_PATH/db_vol"
+      o: bind
 
 networks:
   incep-net:
