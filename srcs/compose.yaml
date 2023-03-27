@@ -7,37 +7,56 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wp-data:${WP_PATH}
+      - wp-vol:${WP_PATH}
     depends_on:
       - wordpress
     networks:
       - incep-net
+    restart: on-failure
 
   wordpress:
     build:
       context: ./requirements/wordpress
       args:
         - "WP_PATH=${WP_PATH}"
-    ports:
-      - "9000:9000"
     volumes:
-      - wp-data:${WP_PATH}
+      - wp-vol:${WP_PATH}
+    depends_on:
+      - mariadb
     networks:
       - incep-net
+    restart: on-failure
     environment:
       - DB_NAME
       - DB_USER
       - DB_PASS
-      - DB_HOST
       - WP_PATH
       - WP_URL
       - WP_TITLE
       - WP_ADMIN_USER
       - WP_ADMIN_PASS
       - WP_ADMIN_EMAIL
+      - WP_EDITOR_USER
+      - WP_EDITOR_PASS
+      - WP_EDITOR_EMAIL
+  
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+    volumes:
+      - db-vol:/var/lib/mysql
+    networks:
+      - incep-net
+    restart: on-failure
+    environment:
+      - DB_NAME
+      - DB_USER
+      - DB_PASS
+      - DB_ROOT_PASS
 
 volumes:
-  wp-data:
+  wp-vol:
+  db-vol:
 
 networks:
   incep-net:

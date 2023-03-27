@@ -24,7 +24,7 @@ ENV WP_PATH=${WP_PATH}
 
 # WordPressのインストール
 RUN apk add --no-cache --virtual .fetch-deps gnupg && \
-    mkdir -p /var/www/ && \
+    mkdir -p "$WP_PATH" && \
 	curl -o /usr/local/bin/wp.gpg -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar.gpg" && \
 	GNUPGHOME="$(mktemp -d)" && export GNUPGHOME && \
 	gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$WP_CLI_GPG_KEY" && \
@@ -33,6 +33,8 @@ RUN apk add --no-cache --virtual .fetch-deps gnupg && \
 	rm -rf "$GNUPGHOME" /usr/local/bin/wp.gpg && unset GNUPGHOME && apk del --no-network .fetch-deps && \
 	chmod +x /usr/local/bin/wp && \
     chown -R nobody:nobody /var/log/php81 && \
+    chmod -R 755 "$WP_PATH" && \
+    chown -R nobody:nobody "$WP_PATH" && \
     wp core download --allow-root --path="${WP_PATH}"
 
 # PHP-FPMの設定
@@ -40,7 +42,6 @@ COPY conf/php-fpm.conf /etc/php81/php-fpm.d/www.conf
 
 # ポートとユーザーを指定
 EXPOSE 9000
-USER nobody
 
 # エントリーポイントを指定
 COPY tools/docker-entrypoint.sh /usr/local/bin/
