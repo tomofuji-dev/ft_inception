@@ -17,13 +17,15 @@ docker_temp_server_start() {
 
 docker_temp_server_start
 
-mysql << DELIMITER
-CREATE DATABASE $DB_NAME;
-CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';
-GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';
-ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';
-FLUSH PRIVILEGES;
-DELIMITER
+if [ ! -d "/var/lib/mysql/wordpress" ]; then
+  mysql << EOF
+    CREATE DATABASE $DB_NAME;
+    CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';
+    GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';
+    FLUSH PRIVILEGES;
+EOF
+fi
 
 mysqladmin shutdown
 
