@@ -37,6 +37,15 @@ RUN apk add --no-cache --virtual .fetch-deps gnupg && \
     chown -R nobody:nobody "$WP_PATH" && \
     wp core download --allow-root --path="${WP_PATH}"
 
+# WordPressのインストール
+# RUN mkdir -p "$WP_PATH" && \
+#     curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+#     chmod +x /usr/local/bin/wp && \
+#     chown -R nobody:nobody /var/log/php81 && \
+#     chmod -R 755 "$WP_PATH" && \
+#     chown -R nobody:nobody "$WP_PATH" && \
+#     wp core download --allow-root --path="${WP_PATH}"
+
 # PHP-FPMの設定
 COPY conf/php-fpm.conf /etc/php81/php-fpm.d/www.conf
 
