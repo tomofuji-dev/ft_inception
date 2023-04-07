@@ -5,7 +5,7 @@ SSL_DIR			:=	$(NGX_DIR)/ssl
 SSL_KEY			:=	$(SSL_DIR)/server.key
 SSL_CRT			:=	$(SSL_DIR)/server.crt
 
-all:	$(SSL_KEY) $(SSL_CRT) dir
+all:	$(SSL_KEY) $(SSL_CRT) host dir
 	make up
 
 $(SSL_KEY):
@@ -15,6 +15,9 @@ $(SSL_CRT):	$(SSL_KEY)
 
 dir:
 	mkdir -p ${HOME}/data/wp_vol ${HOME}/data/db_vol
+
+host:
+	grep -q tfujiwar.42.fr /etc/hosts || sudo echo "127.0.0.1 tfujiwar.42.fr" | sudo tee -a /etc/hosts
 
 down:
 	docker-compose -f ./srcs/compose.yaml down --volumes
