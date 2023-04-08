@@ -24,7 +24,7 @@ down:
 	rm -rf ${HOME}/data
 
 up:
-	docker-compose -f ./srcs/compose.yaml up -d --build
+	docker-compose -f ./srcs/compose.yaml up -d
 
 clean:
 	-docker stop $$(docker ps -qa)
