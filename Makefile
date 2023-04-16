@@ -5,7 +5,7 @@ SSL_DIR			:=	$(NGX_DIR)/ssl
 SSL_KEY			:=	$(SSL_DIR)/server.key
 SSL_CRT			:=	$(SSL_DIR)/server.crt
 
-all:	$(SSL_KEY) $(SSL_CRT) host dir
+all:	$(SSL_KEY) $(SSL_CRT) dir host
 	make up
 
 $(SSL_KEY):
