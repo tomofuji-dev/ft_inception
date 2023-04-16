@@ -20,11 +20,11 @@ host:
 	grep -q tfujiwar.42.fr /etc/hosts || sudo echo "127.0.0.1 tfujiwar.42.fr" | sudo tee -a /etc/hosts
 
 down:
-	docker-compose -f ./srcs/compose.yaml down --volumes
+	docker compose -f ./srcs/compose.yaml down --volumes
 	rm -rf ${HOME}/data
 
 up:
-	docker-compose -f ./srcs/compose.yaml up -d --build
+	docker compose -f ./srcs/compose.yaml up -d --build
 
 clean:
 	-docker stop $$(docker ps -qa)
